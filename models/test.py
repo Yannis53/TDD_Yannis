@@ -17,6 +17,21 @@ class Test(unittest.TestCase):
         self.library.add_book(self.book1)
         self.assertIn(self.book1, self.library.books)
 
+    def test_update_book(self):
+        self.library.add_book(self.book1)
+        updated_book = Book("2210765528", "Livre test 1.2", "Auteur test 1.2", "Éditeur test 1.2", "Broché", False)
+        self.library.update_book(updated_book)
+        self.assertEqual(self.book1.title, "Livre test 1.2")
+        self.assertEqual(self.book1.author, "Auteur test 1.2")
+        self.assertEqual(self.book1.publisher, "Éditeur test 1.2")
+        self.assertEqual(self.book1.format, "Broché")
+        self.assertFalse(self.book1.available)
+
+    def test_remove_book(self):
+        self.library.add_book(self.book1)
+        self.library.remove_book(self.book1)
+        self.assertNotIn(self.book1, self.library.books)
+
     def test_checkValid10CharsISBNCode(self):
         validator = ISBNValidator()
         result = validator.validateISBN("2210765528")
@@ -51,6 +66,8 @@ class Test(unittest.TestCase):
     def test(self):
         self.setUp()
         self.test_add_book()
+        self.test_update_book()
+        self.test_remove_book()
         self.test_checkValid10CharsISBNCode()
         self.test_checkInvalid10CharsISBNCode()
         self.test_invalidLengthShouldThrowsException()
