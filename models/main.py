@@ -17,6 +17,7 @@ class Main:
 
     def __init__(self):
         self.books = []
+        self.books.extend(iter(books))
         self.members = []
         self.reservations = []
 
@@ -30,3 +31,6 @@ class Main:
 
     if __name__ == '__main__':
         app.run()
+    
+    def add_book(self, book):
+        self.books.append(book)

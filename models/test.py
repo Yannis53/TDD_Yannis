@@ -9,8 +9,8 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.library = Main()
-        self.book1 = Book("2210765528", "Livre 1", "Auteur 1", "Éditeur 1", "Poche", True)
-        self.book2 = Book("140274577X", "Livre 2", "Auteur 2", "Éditeur 2", "BD", True)
+        self.book1 = Book("2210765528", "Livre test 1", "Auteur test 1", "Éditeur test 1", "Poche", True)
+        self.book2 = Book("140274577X", "Livre test 2", "Auteur test 2", "Éditeur test 2", "BD", True)
         self.member = Member("Code1", "Yannis", "ZEMIRLINE", datetime.date(1993, 12, 15), "Homme")
 
     def test_add_book(self):
@@ -49,6 +49,8 @@ class Test(unittest.TestCase):
         self.assertTrue(result)
 
     def test(self):
+        self.setUp()
+        self.test_add_book()
         self.test_checkValid10CharsISBNCode()
         self.test_checkInvalid10CharsISBNCode()
         self.test_invalidLengthShouldThrowsException()
