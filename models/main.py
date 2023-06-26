@@ -1,3 +1,6 @@
+from flask import Flask, jsonify, request
+from book import Book
+app = Flask(__name__)
 import pyodbc
 
 server = 'localhost'
@@ -8,11 +11,7 @@ conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database
 
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM Book")
-rows = cursor.fetchall()
-for row in rows:
-    print(row)
-
-conn.close()
+books = cursor.fetchall()
 
 class Main:
 
@@ -20,3 +19,14 @@ class Main:
         self.books = []
         self.members = []
         self.reservations = []
+
+    @app.route('/books', methods=['GET'])
+    def get_all_books():
+        book_list = []
+        for book in books:
+            book_obj = Book(book.isbn, book.title, book.author, book.editor, book.format, book.is_available)
+            book_list.append(book_obj.__dict__)
+        return jsonify(book_list)
+
+    if __name__ == '__main__':
+        app.run()
