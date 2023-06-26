@@ -5,4 +5,4 @@ class Book:
         self.author = author
         self.editor = editor
         self.format = format
-        self.is_available = is_available   
+        self.is_available = is_available
