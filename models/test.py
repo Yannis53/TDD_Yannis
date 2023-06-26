@@ -1,7 +1,21 @@
 import unittest
+import datetime
 from isbn_validator import ISBNValidator
+from main import Main
+from book import Book
+from member import Member
 
 class Test(unittest.TestCase):
+
+    def setUp(self):
+        self.library = Main()
+        self.book1 = Book("2210765528", "Livre 1", "Auteur 1", "Éditeur 1", "Poche", True)
+        self.book2 = Book("140274577X", "Livre 2", "Auteur 2", "Éditeur 2", "BD", True)
+        self.member = Member("Code1", "Yannis", "ZEMIRLINE", datetime.date(1993, 12, 15), "Homme")
+
+    def test_add_book(self):
+        self.library.add_book(self.book1)
+        self.assertIn(self.book1, self.library.books)
 
     def test_checkValid10CharsISBNCode(self):
         validator = ISBNValidator()
