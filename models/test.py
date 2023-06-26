@@ -23,9 +23,9 @@ class Test(unittest.TestCase):
         self.library.update_book(updated_book)
         self.assertEqual(self.book1.title, "Livre test 1.2")
         self.assertEqual(self.book1.author, "Auteur test 1.2")
-        self.assertEqual(self.book1.publisher, "Éditeur test 1.2")
+        self.assertEqual(self.book1.editor, "Éditeur test 1.2")
         self.assertEqual(self.book1.format, "Broché")
-        self.assertFalse(self.book1.available)
+        self.assertFalse(self.book1.is_available)
 
     def test_remove_book(self):
         self.library.add_book(self.book1)

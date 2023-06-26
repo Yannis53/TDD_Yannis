@@ -34,3 +34,16 @@ class Main:
     
     def add_book(self, book):
         self.books.append(book)
+    
+    def update_book(self, book):
+        for i, b in enumerate(self.books):
+            if b.isbn == book.isbn:
+                self.books[i].title = book.title
+                self.books[i].author = book.author
+                self.books[i].editor = book.editor
+                self.books[i].format = book.format
+                self.books[i].is_available = book.is_available
+                break
+
+    def remove_book(self, book):
+        self.books = [b for b in self.books if b != book]
