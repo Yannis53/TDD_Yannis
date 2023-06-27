@@ -3,10 +3,10 @@ from book import Book
 from isbn_validator import ISBNValidator
 import pyodbc
 
-server = 'localhost'
-database = 'TDD_Yannis'
-username = 'sa'
-password = 'Sql2019'
+server = ''
+database = ''
+username = ''
+password = ''
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+password)
 
 class Database:
