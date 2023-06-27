@@ -60,3 +60,12 @@ class Main:
 
     def remove_book(self, book):
         self.books = [b for b in self.books if b != book]
+    
+    def search_books_by_title(self, title):
+        return [book for book in self.books if book.title.lower() == title.lower()]
+    
+    def search_books_by_author(self, author):
+        return [book for book in self.books if book.author.lower() == author.lower()]
+
+    def search_books_by_isbn(self, isbn):
+        return next((book for book in self.books if book.isbn == isbn), None)

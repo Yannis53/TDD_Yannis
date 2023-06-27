@@ -119,16 +119,16 @@ class Test(unittest.TestCase):
     def test_search_books_by_title(self):
         self.library.add_book(self.book1)
         self.library.add_book(self.book2)
-        result = self.library.search_books_by_title("Livre test 1")
-        self.assertIn(self.book1, result)
-        self.assertNotIn(self.book2, result)
+        result = self.library.search_books_by_title("Livre test 2")
+        self.assertIn(self.book2, result)
+        self.assertNotIn(self.book1, result)
 
     def test_search_books_by_author(self):
         self.library.add_book(self.book1)
         self.library.add_book(self.book2)
-        result = self.library.search_books_by_author("Auteur test 1")
-        self.assertIn(self.book1, result)
-        self.assertNotIn(self.book2, result)
+        result = self.library.search_books_by_author("Auteur test 2")
+        self.assertIn(self.book2, result)
+        self.assertNotIn(self.book1, result)
 
     def test_search_books_by_isbn(self):
         self.library.add_book(self.book1)
@@ -142,6 +142,9 @@ class Test(unittest.TestCase):
         self.setUp()
         # Tests des méthodes locales
         self.test_add_book()
+        self.test_search_books_by_title()
+        self.test_search_books_by_author()
+        self.test_search_books_by_isbn()
         self.test_update_book()
         self.test_remove_book()
         self.test_checkValid10CharsISBNCode()
@@ -150,9 +153,6 @@ class Test(unittest.TestCase):
         self.test_nonNumericISBNThrowsException()
         self.test_checkISBNEndingWithAnXIsValid()
         self.test_checkValid13CharsISBNCode()
-        self.test_search_books_by_title()
-        self.test_search_books_by_author()
-        self.test_search_books_by_isbn()
         # Tests des méthodes avec mock de connection DB
         self.test_get_all_books()
 
