@@ -14,7 +14,7 @@ class Test(unittest.TestCase):
         self.library = Main()
         self.book1 = Book("2210765528", "Livre test 1", "Auteur test 1", "Éditeur test 1", "Poche", True)
         self.book2 = Book("140274577X", "Livre test 2", "Auteur test 2", "Éditeur test 2", "BD", True)
-        self.member = Member("Code1", "Yannis", "ZEMIRLINE", datetime.date(1993, 12, 15), "Homme")
+        self.member = Member(1,"Code1", "Yannis", "ZEMIRLINE", datetime.date(1993, 12, 15), "Homme")
         self.app = app.test_client()
         self.conn_mock = mock.Mock()
         self.db = Database(self.conn_mock)
@@ -169,6 +169,8 @@ class Test(unittest.TestCase):
         self.test_nonNumericISBNThrowsException()
         self.test_checkISBNEndingWithAnXIsValid()
         self.test_checkValid13CharsISBNCode()
+        self.test_make_reservation()
+        self.test_get_open_reservations()
         # Tests des méthodes avec mock de connection DB
         self.test_get_all_books()
 

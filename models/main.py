@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
 from book import Book
 from isbn_validator import ISBNValidator
+from reservation import Reservation
 import pyodbc
+import datetime
 
 server = ''
 database = ''
@@ -69,3 +71,21 @@ class Main:
 
     def search_books_by_isbn(self, isbn):
         return next((book for book in self.books if book.isbn == isbn), None)
+    
+    def add_member(self, member):
+        self.members.append(member)
+ 
+    def get_open_reservations(self, member=None):
+        if member:
+            return [reservation for reservation in self.reservations if reservation.member_id == member.id]
+        else:
+            return self.reservations
+    
+    def make_reservation(self, member, book):
+        if len(self.get_open_reservations(member)) >= 3:
+            raise Exception("Ce membre ne peut pas effectuer plus de réservations")
+        limit_date = datetime.date.today() + datetime.timedelta(days=120)
+        reservation_id = len(self.reservations) + 1
+        reservation = Reservation(reservation_id, member.id, limit_date, book.isbn)
+        self.reservations.append(reservation)
+        return reservation
