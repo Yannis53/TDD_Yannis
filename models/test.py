@@ -115,7 +115,28 @@ class Test(unittest.TestCase):
             }
         ]
         self.assertEqual(result, expected_result)
+    
+    def test_search_books_by_title(self):
+        self.library.add_book(self.book1)
+        self.library.add_book(self.book2)
+        result = self.library.search_books_by_title("Livre test 1")
+        self.assertIn(self.book1, result)
+        self.assertNotIn(self.book2, result)
 
+    def test_search_books_by_author(self):
+        self.library.add_book(self.book1)
+        self.library.add_book(self.book2)
+        result = self.library.search_books_by_author("Auteur test 1")
+        self.assertIn(self.book1, result)
+        self.assertNotIn(self.book2, result)
+
+    def test_search_books_by_isbn(self):
+        self.library.add_book(self.book1)
+        self.library.add_book(self.book2)
+        result = self.library.search_books_by_isbn("2210765528")
+        self.assertEqual(result, self.book1)
+        result = self.library.search_books_by_isbn("140274577X")
+        self.assertEqual(result, self.book2)
 
     def test(self):
         self.setUp()
@@ -129,6 +150,9 @@ class Test(unittest.TestCase):
         self.test_nonNumericISBNThrowsException()
         self.test_checkISBNEndingWithAnXIsValid()
         self.test_checkValid13CharsISBNCode()
+        self.test_search_books_by_title()
+        self.test_search_books_by_author()
+        self.test_search_books_by_isbn()
         # Tests des méthodes avec mock de connection DB
         self.test_get_all_books()
 

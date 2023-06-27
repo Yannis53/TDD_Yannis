@@ -6,3 +6,9 @@ class Reservation:
         self.isbn_book = isbn_book
         self.return_date = None
         self.is_returned = False
+    
+    def return_book(self):
+        self.is_returned = True
+
+    def return_book(self, return_date):
+        self.return_date = return_date
