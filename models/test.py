@@ -1,17 +1,23 @@
 import unittest
+from unittest.mock import patch
+from unittest import mock
 import datetime
 from isbn_validator import ISBNValidator
-from main import Main
+from main import Main, app, Database
 from book import Book
 from member import Member
 
 class Test(unittest.TestCase):
+
 
     def setUp(self):
         self.library = Main()
         self.book1 = Book("2210765528", "Livre test 1", "Auteur test 1", "Éditeur test 1", "Poche", True)
         self.book2 = Book("140274577X", "Livre test 2", "Auteur test 2", "Éditeur test 2", "BD", True)
         self.member = Member("Code1", "Yannis", "ZEMIRLINE", datetime.date(1993, 12, 15), "Homme")
+        self.app = app.test_client()
+        self.conn_mock = mock.Mock()
+        self.db = Database(self.conn_mock)
 
     def test_add_book(self):
         self.library.add_book(self.book1)
@@ -62,9 +68,58 @@ class Test(unittest.TestCase):
         validator = ISBNValidator()
         result = validator.validateISBN("9781402745775")
         self.assertTrue(result)
+    
+    def test_get_all_books(self):
+
+        # Création d'un mock du curseur de la base de données
+        cursor_mock = mock.Mock()
+
+        # Définition des valeurs de retour du curseur pour simuler les résultats de la requête SQL
+        cursor_mock.fetchall.return_value = [
+            ('1234567890', 'Book 1', 'Author 1', 'Editor 1', 'Format 1', True),
+            ('0987654321', 'Book 2', 'Author 2', 'Editor 2', 'Format 2', False)
+        ]
+
+        # Configuration du mock de la connexion pour retourner le mock du curseur
+        self.db.conn.cursor.return_value = cursor_mock
+
+        # Appel de la méthode à tester en passant le mock de la connexion comme paramètre
+        result = self.db.get_all_books()
+
+        # Vérification que la méthode cursor() a été appelée sur la connexion
+        self.db.conn.cursor.assert_called_once()
+
+        # Vérification que la méthode execute() a été appelée sur le curseur avec la requête SQL appropriée
+        cursor_mock.execute.assert_called_once_with("SELECT * FROM Book")
+
+        # Vérification que la méthode fetchall() a été appelée sur le curseur
+        cursor_mock.fetchall.assert_called_once()
+
+        # Vérification des résultats
+        expected_result = [
+            {
+                'isbn': '1234567890',
+                'title': 'Book 1',
+                'author': 'Author 1',
+                'editor': 'Editor 1',
+                'format': 'Format 1',
+                'is_available': True
+            },
+            {
+                'isbn': '0987654321',
+                'title': 'Book 2',
+                'author': 'Author 2',
+                'editor': 'Editor 2',
+                'format': 'Format 2',
+                'is_available': False
+            }
+        ]
+        self.assertEqual(result, expected_result)
+
 
     def test(self):
         self.setUp()
+        # Tests des méthodes locales
         self.test_add_book()
         self.test_update_book()
         self.test_remove_book()
@@ -74,6 +129,8 @@ class Test(unittest.TestCase):
         self.test_nonNumericISBNThrowsException()
         self.test_checkISBNEndingWithAnXIsValid()
         self.test_checkValid13CharsISBNCode()
+        # Tests des méthodes avec mock de connection DB
+        self.test_get_all_books()
 
 if __name__ == '__main__':
     unittest.main(exit=False)

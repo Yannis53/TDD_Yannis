@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from book import Book
-app = Flask(__name__)
+from isbn_validator import ISBNValidator
 import pyodbc
 
 server = 'localhost'
@@ -9,31 +9,44 @@ username = 'sa'
 password = 'Sql2019'
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+password)
 
-cursor = conn.cursor()
-cursor.execute("SELECT * FROM Book")
-books = cursor.fetchall()
+class Database:
+    def __init__(self, conn):
+        self.conn = conn
+
+    def get_all_books(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM Book")
+        books = cursor.fetchall()
+        book_list = []
+        for book in books:
+            isbn, title, author, editor, book_format, is_available = book
+            book_obj = Book(isbn, title, author, editor, book_format, is_available)
+            book_list.append(book_obj.__dict__)
+        return book_list
+
+app = Flask(__name__)
+db = Database(conn)
 
 class Main:
 
     def __init__(self):
         self.books = []
-        self.books.extend(iter(books))
         self.members = []
         self.reservations = []
 
+    # Route pour récupérer tous les livres
     @app.route('/books', methods=['GET'])
-    def get_all_books():
-        book_list = []
-        for book in books:
-            book_obj = Book(book.isbn, book.title, book.author, book.editor, book.format, book.is_available)
-            book_list.append(book_obj.__dict__)
+    def get_all_books(self):
+        db = Database(self.conn)
+        book_list = db.get_all_books()
         return jsonify(book_list)
-
     if __name__ == '__main__':
         app.run()
     
     def add_book(self, book):
-        self.books.append(book)
+        validator = ISBNValidator()
+        if validator.validateISBN(book.isbn): # Vérifie que l'isbn du livre est conforme
+            self.books.append(book)
     
     def update_book(self, book):
         for i, b in enumerate(self.books):

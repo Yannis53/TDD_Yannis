@@ -1,13 +1,9 @@
 class ISBNValidator:
-    LONG_ISBN_LENGTH = 13
-    SHORT_ISBN_LENGTH = 10
-    LONG_ISBN_DIVIDER = 10
-    SHORT_ISBN_DIVIDER = 11
 
     def validateISBN(self, isbn):
-        if len(isbn) == self.LONG_ISBN_LENGTH:
+        if len(isbn) == 13:
             return self.validateLongISBN(isbn)
-        elif len(isbn) == self.SHORT_ISBN_LENGTH:
+        elif len(isbn) == 10:
             return self.validateShortISBN(isbn)
 
         raise ValueError("An ISBN should be 10 or 13 characters long.")
@@ -15,14 +11,14 @@ class ISBNValidator:
     def validateLongISBN(self, isbn):
         total = sum(
             int(isbn[i]) if i % 2 == 0 else int(isbn[i]) * 3
-            for i in range(self.LONG_ISBN_LENGTH)
+            for i in range(13)
         )
-        return (total % self.LONG_ISBN_DIVIDER == 0)
+        return (total % 10 == 0)
 
     def validateShortISBN(self, isbn):
         total = 0
 
-        for i in range(self.SHORT_ISBN_LENGTH):
+        for i in range(10):
             if not isbn[i].isdigit():
                 if i != 9 or isbn[i] != 'X':
                     raise ValueError("An ISBN should contain digits only.")
@@ -31,4 +27,4 @@ class ISBNValidator:
                 break
             total += int(isbn[i]) * (10 - i)
 
-        return (total % self.SHORT_ISBN_DIVIDER == 0)
+        return (total % 11 == 0)
